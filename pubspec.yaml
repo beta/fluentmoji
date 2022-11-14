@@ -9,8 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluff: ^0.5.0
+  event_bus: ^2.0.0
+  fluff: ^0.6.0
   fuzzy: ^0.4.0-nullsafety.0
+  hotkey_manager: ^0.1.7
+  scroll_to_index: ^3.0.1
+  system_tray: ^2.0.2
+  window_manager: ^0.2.7
 
 dev_dependencies:
   flutter_test:
@@ -18,3 +23,5 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 flutter:
+  assets:
+    - assets/icons/
