@@ -90,8 +90,12 @@ class GitmojiView extends StatelessWidget {
                             alignment: Alignment.topCenter,
                             child: Padding(
                               padding: const EdgeInsets.only(top: 4, bottom: 6),
-                              child: Label(gitmoji.emoji,
-                                  typography: Typography.title),
+                              child: Label(
+                                gitmoji.emoji,
+                                typography: Typography.title.copyWith(
+                                  fontFamily: 'Segoe UI Emoji',
+                                ),
+                              ),
                             ),
                           ),
                         ),
