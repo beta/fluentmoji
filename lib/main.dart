@@ -16,10 +16,14 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:fluff/fluff.dart';
 import 'package:flutter/material.dart' hide Typography, MenuItem;
 import 'package:flutter/services.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:fuzzy/fuzzy.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -38,6 +42,24 @@ final EventBus bus = EventBus();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Init flutter_acrylic
+  await Window.initialize();
+
+  // Init window with window_manager
+  await windowManager.ensureInitialized();
+  const windowOptions = WindowOptions(
+    title: appName,
+    center: true,
+    size: Size(360, 480),
+    minimumSize: Size(360, 480),
+    maximumSize: Size(360, 20000),
+    titleBarStyle: TitleBarStyle.hidden,
+  );
+  await windowManager.waitUntilReadyToShow(windowOptions, () async {
+    windowManager.show();
+    windowManager.focus();
+  });
+
   // Tray icon
   await initSystemTray(bus: bus);
 
@@ -45,17 +67,11 @@ Future<void> main() async {
   await hotKeyManager.unregisterAll(); // For hot reload
   await registerHotkeys();
 
-  await FluffApp.init(
-    useCustomWindow: true,
-    showSystemTitleBar: false,
-    initialSize: const Size(360, 480),
-    minSize: const Size(360, 480),
-    // FIXME: find a way to only allow resizing vertically
-    maxSize: const Size(360, 20000),
-  );
+  await FluffApp.init();
 
   runApp(FluffApp(
     title: appName,
+    useCustomTitleBar: true,
     windowControls: CaptionButtons(
       maximizeDisabled: true,
       onClose: windowManager.hide,
@@ -134,6 +150,14 @@ class _AppState extends State<App> with WindowListener {
       if (!_focusNode.hasFocus) {
         _focusNode.requestFocus();
       }
+    });
+
+    _getAutoWindowEffect().then((effect) {
+      Window.setEffect(
+        effect: effect,
+        color: _getWindowBackgroundColor(effect),
+        dark: FluffApp.dark,
+      );
     });
   }
 
@@ -422,6 +446,36 @@ class _AppState extends State<App> with WindowListener {
           onInvoke: (_) => _onHideWindow(),
         ),
       };
+
+  Future<WindowEffect> _getAutoWindowEffect() async {
+    if (Platform.isWindows) {
+      final windowsInfo = await DeviceInfoPlugin().windowsInfo;
+      final buildNo = windowsInfo.buildNumber;
+      if (buildNo >= 22000) {
+        return WindowEffect.mica;
+      } else if (buildNo >= 17134) {
+        // 17134 is the build number of 1803
+        return WindowEffect.acrylic;
+      }
+      return WindowEffect.disabled;
+    }
+
+    return WindowEffect.disabled;
+  }
+
+  Color _getWindowBackgroundColor(WindowEffect effect) {
+    switch (effect) {
+      case WindowEffect.transparent:
+      case WindowEffect.mica:
+        return Colors.transparent;
+
+      case WindowEffect.acrylic:
+        return ColorPalette.background.solid.base.withOpacity(0.6);
+
+      default:
+        return ColorPalette.background.solid.base;
+    }
+  }
 }
 
 extension GitmojiListIndexUtils on List<Gitmoji> {

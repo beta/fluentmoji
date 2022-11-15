@@ -1,7 +1,7 @@
 name: fluentmoji
 description: A fluent design Gitmoji app.
 publish_to: 'none'
-version: 0.1.1
+version: 0.1.2
 
 environment:
   sdk: '>=2.18.4 <3.0.0'
@@ -9,8 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  device_info_plus: ^8.0.0
   event_bus: ^2.0.0
-  fluff: ^0.6.0
+  fluff: ^0.7.0
+  flutter_acrylic: ^1.0.0+2
   fuzzy: ^0.4.0-nullsafety.0
   hotkey_manager: ^0.1.7
   scroll_to_index: ^3.0.1

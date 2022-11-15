@@ -44,19 +44,19 @@ packages:
     source: hosted
     version: "3.0.2"
   device_info_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: device_info_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.0.1"
+    version: "8.0.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
       name: device_info_plus_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.1"
+    version: "7.0.0"
   event_bus:
     dependency: "direct main"
     description:
@@ -91,14 +91,14 @@ packages:
       name: fluff
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0"
+    version: "0.7.0"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
   flutter_acrylic:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_acrylic
       url: "https://pub.dartlang.org"
